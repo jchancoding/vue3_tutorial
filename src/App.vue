@@ -3,7 +3,7 @@
     <Header />
     <div class="container">
         <Balance :total="total" />
-        <IncomeExpenses />
+        <IncomeExpenses :income="income" :expenses="expenses"/>
         <!-- pass transactions as props to TransactionList component -->
         <TransactionList :transactions="transactions" />
         <AddTransaction />
@@ -36,6 +36,22 @@ const total = computed(()=>{
 });
 
 // get income
+const income = computed(()=>{
+    return transactions.value
+    .filter((transaction) => transaction.amount > 0) // filter positive transactions
+    .reduce((acc, transaction)=>{
+        return acc + transaction.amount;
+    }, 0)
+    .toFixed(2); // round to 2 decimal places
+});
 
 // get expenses
+const expenses = computed(()=>{
+    return transactions.value
+    .filter((transaction) => transaction.amount < 0) // filter negative transactions
+    .reduce((acc, transaction)=>{
+        return acc + transaction.amount;
+    }, 0)
+    .toFixed(2); // round to 2 decimal places
+});
 </script>
